@@ -1,8 +1,9 @@
-#include <stdint.h>
-#include <stdio.h>
-#include "hash/fnv1a.h"
+#include "./index/file.h"
 
 int main(void) {
-    unsigned long long hash = fnv1a_file("./.gitignore");
-    printf("%llu\n", hash);
+    size_t n;
+    const FileEntry *list = scan_dir(".", &n);
+    for (size_t i = 0; i < n; i++)
+        printf("%016llx  %s\n", (unsigned long long) list[i].hash, list[i].path);
+    free_entries(list, n);
 }
