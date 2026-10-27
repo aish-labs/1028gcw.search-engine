@@ -1,7 +1,6 @@
 #ifndef FNV1A_H
 #define FNV1A_H
 
-#include <stdio.h>
 #include <stdint.h>
 
 // The hash algorithm used to detect file changes.

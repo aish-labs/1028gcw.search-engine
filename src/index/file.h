@@ -2,9 +2,7 @@
 #define FILE_H
 
 #include <stdlib.h>
-#include <string.h>
-#include <dirent.h>
-#include "../hash/fnv1a.h"
+#include <stdint.h>
 
 typedef struct {
     const char *path;

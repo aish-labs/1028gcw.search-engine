@@ -1,4 +1,5 @@
 #include "fnv1a.h"
+#include <stdio.h>
 
 uint64_t fnv1a_file(const char *path) {
     FILE *file = fopen(path, "rb");

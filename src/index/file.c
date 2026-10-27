@@ -1,4 +1,8 @@
 #include "file.h"
+#include "../hash/fnv1a.h"
+#include <dirent.h>
+#include <stdio.h>
+#include <string.h>
 
 static void walk(const char *dir, FileEntry **arr, size_t *n) {
     DIR *d = opendir(dir);

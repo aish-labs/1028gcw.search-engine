@@ -1,4 +1,5 @@
 #include "./index/file.h"
+#include <stdio.h>
 
 int main(void) {
     size_t n;
