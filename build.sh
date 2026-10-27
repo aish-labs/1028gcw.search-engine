@@ -1,4 +1,4 @@
 #!/bin/bash
 
 set -e
-gcc -Wall -Isrc $(find src -name '*.c') -o app
+gcc -O2 -Wall -Isrc $(find src -name '*.c') -o app

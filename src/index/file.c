@@ -6,10 +6,10 @@
 #include <sys/stat.h>
 
 static void walk(const char *dir, FileEntry **array, size_t *file_count, size_t *capacity) {
-    DIR *d = opendir(dir); // potential fail here
+    DIR *directory = opendir(dir); // potential fail here
 
     struct dirent *entry;
-    while ((entry = readdir(d))) {
+    while ((entry = readdir(directory))) {
         // skip current and parent directory
         if (!strcmp(entry->d_name, ".") || !strcmp(entry->d_name, "..")) continue;
 
@@ -18,13 +18,13 @@ static void walk(const char *dir, FileEntry **array, size_t *file_count, size_t 
         char *path = malloc(needed_size); // potential fail here
         snprintf(path, needed_size, "%s/%s", dir, entry->d_name);
 
-        struct stat file_stat;
-        lstat(path, &file_stat); // potential fail here, **must check**, like permission denied
+        struct stat st;
+        lstat(path, &st); // potential fail here, **must check**, like permission denied
 
-        if (S_ISDIR(file_stat.st_mode)) {
+        if (S_ISDIR(st.st_mode)) {
             // is directory
             walk(path, array, file_count, capacity);
-        } else if (S_ISREG(file_stat.st_mode)) {
+        } else if (S_ISREG(st.st_mode)) {
             // is file
             if (*file_count == *capacity) {
                 size_t new_cap = *capacity ? *capacity * 2 : 64;
@@ -39,7 +39,7 @@ static void walk(const char *dir, FileEntry **array, size_t *file_count, size_t 
         free(path);
     }
 
-    closedir(d);
+    closedir(directory);
 }
 
 const FileEntry *scan_dir(const char *root, size_t *file_count) {

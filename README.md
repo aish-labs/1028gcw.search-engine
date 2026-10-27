@@ -14,3 +14,9 @@ Output file will be at `./app(.exe)`.
 > In Windows, `bash.exe` must be available in PATH to run the script.
 
 ## Usage
+
+```
+./app(.exe) [path]
+```
+
+If no path is given, the current working directory will be used.
