@@ -11,7 +11,7 @@ int main(int argc, char *argv[]) {
     // check if the given path is a directory
     char *path = (argc == 2) ? argv[1] : ".";
     struct stat st;
-    if (lstat(path, &st) == -1) goto exit_error_path_access_failed;
+    if (stat(path, &st) == -1) goto exit_error_path_access_failed;
     if (!S_ISDIR(st.st_mode)) goto exit_error_path_not_directory;
 
     // clean the trailing "/" in the `path` if possible
