@@ -24,7 +24,9 @@ int main(int argc, char *argv[]) {
     }
 
     size_t file_count;
-    const FileEntry *array = scan_dir(path, &file_count);
+    FileEntry *array;
+    int error = scan_dir(path, &array, &file_count);
+    if (error) goto exit_error_scan_dir_failed; // no need to free here
 
     for (size_t i = 0; i < file_count; i++)
         printf("%016llx  %s\n", (unsigned long long) array[i].hash, array[i].path);
@@ -41,7 +43,7 @@ int main(int argc, char *argv[]) {
         return 0;
 
     exit_error_arguments_invalid:
-        fprintf(stderr, "Usage: %s [path]\nPlease check your input.", argv[0]);
+        fprintf(stderr, "Usage: %s [path]\nPlease check your input.\n", argv[0]);
         return 1;
 
     exit_error_path_access_failed:
@@ -50,5 +52,9 @@ int main(int argc, char *argv[]) {
 
     exit_error_path_not_directory:
         fprintf(stderr, "\"%s\" is not a directory.\n", path);
+        return 1;
+
+    exit_error_scan_dir_failed:
+        fprintf(stderr, "Scan directory failed, error code %d.\n", error);
         return 1;
 }

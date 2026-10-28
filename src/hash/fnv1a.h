@@ -4,7 +4,12 @@
 #include <stdint.h>
 
 // The hash algorithm used to detect file changes.
-// We assume the file exists, but if not it returns 0.
-uint64_t fnv1a_file(const char *path);
+//
+// File hash returns via `hash`.
+//
+// Errors:
+//   -1 => file read failed.
+//
+int fnv1a_file(const char *path, uint64_t *hash);
 
 #endif
