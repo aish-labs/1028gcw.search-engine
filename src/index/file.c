@@ -5,9 +5,16 @@
 #include <string.h>
 #include <sys/stat.h>
 
-// There is no `lstat` on MinGW.
 #ifdef _WIN32
   #define lstat stat
+
+  static char *fullpath(const char *path) {
+      return _fullpath(NULL, path, 0);
+  }
+#else
+  static char *fullpath(const char *path) {
+      return realpath(path, NULL);
+  }
 #endif
 
 static int walk(const char *dir, FileEntry **array, size_t *file_count, size_t *capacity) {
@@ -33,7 +40,6 @@ static int walk(const char *dir, FileEntry **array, size_t *file_count, size_t *
         if (S_ISDIR(st.st_mode)) {
             // is directory
             rc = walk(path, array, file_count, capacity);
-            free(path);
             if (rc == -1) rc = 0; // skip if **child** directory walk fail
             if (rc) break;
         } else if (S_ISREG(st.st_mode)) {
@@ -49,12 +55,15 @@ static int walk(const char *dir, FileEntry **array, size_t *file_count, size_t *
                 *capacity = new_cap;
             }
 
-            (*array)[*file_count].path = path; // ownership transferred here
-            (*array)[*file_count].hash = hash;
-            (*file_count)++;
-        } else {
-            free(path);
+            char *full_path = fullpath(path);
+            if (full_path) {
+                (*array)[*file_count].path = full_path;
+                (*array)[*file_count].hash = hash;
+                (*file_count)++;
+            }
         }
+
+        free(path);
     }
 
     closedir(directory);

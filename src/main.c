@@ -14,15 +14,6 @@ int main(int argc, char *argv[]) {
     if (stat(path, &st) == -1) goto exit_error_path_access_failed;
     if (!S_ISDIR(st.st_mode)) goto exit_error_path_not_directory;
 
-    // clean the trailing "/" in the `path` if possible
-    {
-        size_t len = strlen(path);
-        // `len > 1` protects "/"
-        while (len > 1 && path[len - 1] == '/') {
-            path[--len] = '\0';
-        }
-    }
-
     size_t file_count;
     FileEntry *array;
     int error = scan_dir(path, &array, &file_count);
