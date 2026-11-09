@@ -17,7 +17,7 @@
   }
 #endif
 
-static int walk(const char *dir, FileEntry **array, size_t *file_count, size_t *capacity) {
+static int walk(const char *dir, FileEntry *array[], size_t *file_count, size_t *capacity) {
     DIR *directory = opendir(dir);
     if (!directory) return -1;
 
@@ -70,7 +70,7 @@ static int walk(const char *dir, FileEntry **array, size_t *file_count, size_t *
     return rc;
 }
 
-int scan_dir(const char *root, FileEntry **array, size_t *file_count) {
+int scan_dir(const char *root, FileEntry *array[], size_t *file_count) {
     *array = NULL;
     *file_count = 0;
     size_t capacity = 0;
@@ -86,7 +86,7 @@ int scan_dir(const char *root, FileEntry **array, size_t *file_count) {
     return 0;
 }
 
-void free_entries(FileEntry *array, size_t file_count) {
+void free_entries(FileEntry array[], size_t file_count) {
     for (size_t i = 0; i < file_count; i++) free(array[i].path);
     free(array);
 }

@@ -20,9 +20,9 @@ typedef struct {
 //   -2 => path malloc failed;
 //   -3 => array realloc failed.
 //
-int scan_dir(const char *root, FileEntry **array, size_t *file_count);
+int scan_dir(const char *root, FileEntry *array[], size_t *file_count);
 
 // Free a `FileEntry` instance.
-void free_entries(FileEntry *array, size_t file_count);
+void free_entries(FileEntry array[], size_t file_count);
 
 #endif
