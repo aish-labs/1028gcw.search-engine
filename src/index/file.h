@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-typedef struct {
+typedef struct FileEntry {
     char *path;
     uint64_t hash;
 } FileEntry;
