@@ -2,18 +2,19 @@
 #define SORT_H
 #include "../index/index.h"
 
-typedef struct {
+typedef struct RankingEntry{
     uint64_t doc_id;
     size_t score;
 } RankingEntry;
 
-int sort_by_score(RankingEntry results[], int count);
-int calculate_score(int times[], int word_count);
-int rank_word(
+int search_find(  
     const Index *index,
     const char *word,
-    RankingEntry results[],
-    int capacity,
+    RankingEntry **results,
     int *result_count
 );
+// searches one normalized words, scores matche, and sorts results(by decending score)
+
+void free_search_results(RankingEntry *results);
+
 #endif

@@ -1,7 +1,9 @@
 #include "sort.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
 
-int sort_by_score(RankingEntry results[], int count)
+static int sort_by_score(RankingEntry results[], int count)
 {
     int i, j;
     RankingEntry tmp;
@@ -41,69 +43,89 @@ int sort_by_score(RankingEntry results[], int count)
 }
 
 
-//Sum all elements in array to get total score.
-int calculate_score(int times[], int word_count)
-{
-    int total = 0;
-    int i;
-
-    for (i = 0; i < word_count; i++)
-    {
-        total = total + times[i];
-    }
-
-    return total;
-}
-
-
-int rank_word(
+int search_find(
     const Index *index,
     const char *word,
-    RankingEntry results[],
-    int capacity,
+    RankingEntry **results,
     int *result_count)
 {
-    Posting *p = NULL;
+    Posting *head = NULL;
+    Posting *p;
+    RankingEntry *array;
     int error;
-    int n = 0;
+    int count = 0;
+    int i = 0;
 
     // Check parameters.
-    if (result_count == NULL)
+    if (result_count == NULL || results == NULL)
         return -1;
 
+    *results = NULL;
     *result_count = 0;
 
-    if (index == NULL || word == NULL || capacity < 0)
-        return -1;
-
-    if (capacity > 0 && results == NULL)
+    if (index == NULL || word == NULL)
         return -1;
 
     // Look up one normalized word.
-    error = index_lookup(index, word, &p);
+    error = index_lookup(index, word, &head);
 
     if (error != 0)
         return error;
 
-    // Copy each matching document and its score.
+    // Copy each matching document and its score
+    p = head;
     while (p != NULL)
     {
-        if (n >= capacity)
-            return -2; // Not enough space for all matches.
+        if (count == INT_MAX)
+            return -2; // Not enough space for all matches
 
-        results[n].doc_id = p->doc_id;
-        results[n].score = p->count;
-
-        n++;
+        count++;
         p = p->next;
     }
 
-    // Sort the collected results.
-    error = sort_by_score(results, n);
+     if (count == 0)
+        return 0; // No matches.
+
+
+    // Check the allocation size.
+    if ((size_t)count > SIZE_MAX / sizeof(RankingEntry))
+        return -2;
+
+    // Allocate space for all results.
+    array = malloc((size_t)count * sizeof(RankingEntry));
+
+    if (array == NULL)
+        return -2;
+
+    // Copy document IDs and use word counts as scores.
+    p = head;
+    while (p != NULL)
+    {
+        array[i].doc_id = p->doc_id;
+        array[i].score = p->count;
+
+        i++;
+        p = p->next;
+    }
+
+    // Sort by descending score.
+    error = sort_by_score(array, count);
 
     if (error != 0)
+    {
+        free(array);
         return error;
+    }
 
-    *result_count = n;
+    // Return the allocated array and its length
+    *results = array;
+    *result_count = count;
+
     return 0;
+}
+
+// search_find ends here
+void free_search_results(RankingEntry *results)
+{
+    free(results);
 }
