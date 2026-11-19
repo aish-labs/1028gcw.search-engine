@@ -7,13 +7,15 @@ typedef struct RankingEntry{
     size_t score;
 } RankingEntry;
 
-int search_find(  
+// Searches one normalized words, scores matche
+// and sorts results(by decending score).
+
+int search(  
     const Index *index,
     const char *word,
-    RankingEntry **results,
+    RankingEntry *results[],
     int *result_count
 );
-// searches one normalized words, scores matche, and sorts results(by decending score)
 
 void free_search_results(RankingEntry *results);
 

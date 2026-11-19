@@ -43,10 +43,10 @@ static int sort_by_score(RankingEntry results[], int count)
 }
 
 
-int search_find(
+int search(
     const Index *index,
     const char *word,
-    RankingEntry **results,
+    RankingEntry *results[],
     int *result_count)
 {
     Posting *head = NULL;
@@ -84,7 +84,7 @@ int search_find(
     }
 
      if (count == 0)
-        return 0; // No matches.
+        return 0; // No matches
 
 
     // Check the allocation size.
@@ -97,7 +97,8 @@ int search_find(
     if (array == NULL)
         return -2;
 
-    // Copy document IDs and use word counts as scores.
+
+    // Copy document IDs and use word counts as scores
     p = head;
     while (p != NULL)
     {
@@ -124,7 +125,7 @@ int search_find(
     return 0;
 }
 
-// search_find ends here
+// Search ends here
 void free_search_results(RankingEntry *results)
 {
     free(results);
