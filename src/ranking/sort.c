@@ -126,7 +126,7 @@ int search(
 }
 
 // Search ends here
-void free_search_results(RankingEntry *results)
+void free_search_results(RankingEntry results[])
 {
     free(results);
 }

@@ -17,6 +17,6 @@ int search(
     int *result_count
 );
 
-void free_search_results(RankingEntry *results);
+void free_search_results(RankingEntry results[]);
 
 #endif
