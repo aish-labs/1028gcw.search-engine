@@ -34,7 +34,7 @@ static int walk(const char *dir, FileEntry *array[], size_t *file_count, size_t 
         snprintf(path, needed_size, "%s/%s", dir, entry->d_name);
 
         struct stat st;
-        // ignore accessible files
+        // ignore inaccessible files
         if (lstat(path, &st)) { free(path); continue; }
 
         if (S_ISDIR(st.st_mode)) {

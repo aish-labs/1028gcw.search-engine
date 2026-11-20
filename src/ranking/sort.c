@@ -47,7 +47,7 @@ int search(
     const Index *index,
     const char *word,
     RankingEntry *results[],
-    int *result_count)
+    size_t *result_count)
 {
     Posting *head = NULL;
     Posting *p;

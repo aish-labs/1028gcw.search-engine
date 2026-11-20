@@ -14,7 +14,7 @@ int search(
     const Index *index,
     const char *word,
     RankingEntry *results[],
-    int *result_count
+    size_t *result_count
 );
 
 void free_search_results(RankingEntry results[]);
